@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Visitantes - Museo Regional</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        .navbar {
+            background: #611232;
+            border-bottom: 2px solid #e9ecef;
+            padding: 5px 0;
+        }
+        
+        .logo-nav { height: 50px; cursor: pointer; }
+        
+        .carousel-item img {
+            height: 270px;
+            object-fit: contain;
+        }
+        
+        .section { display: none; }
+        .active { display: block; }
+        .card-custom { border-radius: 15px; border: none; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        
+        .radio-img-container {
+            display: flex; align-items: center; gap: 12px; padding: 10px 15px;
+            border: 1px solid #dee2e6; border-radius: 10px; margin-bottom: 8px;
+            transition: all 0.3s; cursor: pointer; background: white;
+            height: 100%; /* Para que todos los cuadros midan lo mismo */
+        }
+        .radio-img-container:hover { border-color: #0d6efd; background-color: #f0f7ff; }
+        
+        .icon-radio {
+            width: 40px;
+            height: 40px;
+            flex-shrink: 0; /* Evita que el icono se aplaste con texto largo */
+            object-fit: contain;
+        }
+        
+        #admin-panel { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: white; z-index: 2000; overflow-y: auto; padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar sticky-top">
+        <div class="container d-flex justify-content-between align-items-center">
+            <img src="/iconos/secretaria.png" class="logo-nav">
+            <img src="/iconos/mrg3.png" id="btn-admin-logo" class="logo-nav">
+            <img src="/iconos/inah.png" class="logo-nav">
+        </div>
+    </nav>
+
+    <div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner">
+            <div class="carousel-item active"><img src="carrousel/6.jpg" class="d-block w-100"></div>
+            <div class="carousel-item"><img src="carrousel/1.jpg" class="d-block w-100"></div>
+            <div class="carousel-item"><img src="carrousel/2.jpg" class="d-block w-100"></div>
+            <div class="carousel-item"><img src="carrousel/3.jpg" class="d-block w-100"></div>
+            <div class="carousel-item"><img src="carrousel/4.jpg" class="d-block w-100"></div>
+            <div class="carousel-item"><img src="carrousel/5.jpg" class="d-block w-100"></div>
+        </div>
+    </div>
+
+    <div class="container mt-3 pb-5">
+        <div id="step-1" class="section active card card-custom p-4 text-center">
+            <h3 class="mb-3">¿Cuántas personas nos visitan?</h3>
+            <div class="d-flex justify-content-center align-items-center gap-3">
+                <input type="number" id="num-personas" class="form-control form-control-lg w-25 text-center" min="1" value="1">
+                <button id="btn-aceptar" class="btn btn-primary btn-lg px-5">Aceptar</button>
+            </div>
+        </div>
+
+        <div id="step-2" class="section card card-custom p-4">
+            <h4 id="titulo-persona" class="text-primary mb-3">Registro Visitante 1</h4>
+            <form id="form-registro">
+                <p class="fw-bold mb-2">¿Cómo se identifica la persona?</p>
+                <div class="row mb-3">
+                    <script>
+                        const gens = [
+                            {id:'hombres', txt:'Hombre'}, {id:'mujeres', txt:'Mujer'},
+                            {id:'nobinarios', txt:'No Binario'}, {id:'prefiero_no_decirlo', txt:'Otro / No decir'}
+                        ];
+                        gens.forEach(g => {
+                            document.write(`
+                                <div class="col-md-3">
+                                    <label class="radio-img-container">
+                                        <input type="radio" name="genero" value="${g.id}">
+                                        <img src="iconos/${g.id}.png" class="icon-radio">
+                                        <span>${g.txt}</span>
+                                    </label>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+
+                <p class="fw-bold mb-2">¿A qué grupo social pertenece?</p>
+                <div class="row g-2">
+                    <script>
+                        const grupos = [
+                            { id: 'lgbttqimas', txt: 'LGBTTTQI+' }, 
+                            { id: 'infancias_adolescentes', txt: 'Infancias/Adolescentes' },
+                            { id: 'adultosmayores', txt: 'Adultos Mayores' }, 
+                            { id: 'afrodescendientes', txt: 'Personas Afrodescendientes' },
+                            { id: 'personas_artesanas', txt: 'Personas Artesanas' }, 
+                            { id: 'personas_con_discapacidad', txt: 'Personas con Discapacidad' },
+                            { id: 'personas_embarazados', txt: 'Embarazadas, En Lactancia, Jefas de Familia o en Situación de Vulnerabilidad' }, 
+                            { id: 'situacion_calle', txt: 'Personas en Situación de Calle' },
+                            { id: 'personas_indigenes', txt: 'Personas Indígenas' }, 
+                            { id: 'personas_jovenes', txt: 'Personas Jóvenes' },
+                            { id: 'personas_migrantes', txt: 'Personas Migrantes y en situación de refugio' }
+                        ];
+                        grupos.forEach(g => {
+                            document.write(`
+                                <div class="col-md-6 col-lg-4">
+                                    <label class="radio-img-container">
+                                        <input type="radio" name="grupo_social" value="${g.id}">
+                                        <img src="iconos/${g.id}.png" class="icon-radio">
+                                        <span style="font-size: 0.85rem; line-height: 1.1;">${g.txt}</span>
+                                    </label>
+                                </div>
+                            `);
+                        });
+                    </script>
+                </div>
+
+                <div class="text-end mt-4">
+                    <button type="button" id="btn-siguiente" class="btn btn-dark btn-lg px-5">Siguiente</button>
+                    <button type="button" id="btn-finalizar" class="btn btn-success btn-lg px-5 d-none">Finalizar</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="step-3" class="section card card-custom p-5 text-center">
+            <h1 class="display-4 text-success">¡Muchas Gracias!</h1>
+            <div class="spinner-border text-success my-3" style="width: 3rem; height: 3rem;"></div>
+            <p class="lead">Regresando al inicio...</p>
+        </div>
+    </div>
+
+    <div id="admin-panel" class="section">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-4">
+                <h2>Reporte por Colección: visitas_detalladas</h2>
+                <div>
+                    <button id="btn-export-excel" class="btn btn-success btn-sm">Excel</button>
+                    <button id="btn-export-pdf" class="btn btn-danger btn-sm">PDF</button>
+                    <button id="btn-close-admin" class="btn btn-outline-dark btn-sm">Cerrar</button>
+                </div>
+            </div>
+
+            <div class="row mb-4 bg-light p-3 rounded">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Año:</label>
+                    <select id="filter-year" class="form-select"></select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Mes:</label>
+                    <select id="filter-month" class="form-select"></select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button id="btn-generar-reporte" class="btn btn-primary w-100">Generar Informe</button>
+                </div>
+            </div>
+
+            <div id="reporte-content"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDfHasUn9olSiAe59At2XcZFnyYMvGJm2U",
+            authDomain: "appvisitantes-c3b62.firebaseapp.com",
+            projectId: "appvisitantes-c3b62",
+            storageBucket: "appvisitantes-c3b62.firebasestorage.app",
+            messagingSenderId: "924367990190",
+            appId: "1:924367990190:web:48d333388355359e5cac3f"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        let totalP = 0, actualP = 1;
+
+        $('#btn-aceptar').click(() => {
+            totalP = parseInt($('#num-personas').val());
+            if(totalP > 0) { $('#step-1').hide(); $('#step-2').fadeIn(); updateUI(); }
+        });
+
+        $('#btn-siguiente').click(async function() {
+            await saveToFirebase();
+            actualP++;
+            $('#titulo-persona').text(`Registro Visitante ${actualP}`);
+            $('#form-registro')[0].reset();
+            updateUI();
+        });
+
+        $('#btn-finalizar').click(async function() {
+            await saveToFirebase();
+            $('#step-2').hide(); $('#step-3').fadeIn();
+            setTimeout(() => {
+                actualP = 1; $('#form-registro')[0].reset();
+                $('#step-3').hide(); $('#step-1').show();
+                $('#btn-siguiente').show(); $('#btn-finalizar').hide();
+                $('#titulo-persona').text('Registro Visitante 1');
+            }, 2000);
+        });
+
+        function updateUI() {
+            if(actualP >= totalP) { $('#btn-siguiente').hide(); $('#btn-finalizar').removeClass('d-none').show(); }
+        }
+
+        async function saveToFirebase() {
+            const gen = $('input[name="genero"]:checked').val();
+            const grp = $('input[name="grupo_social"]:checked').val();
+            if(!grp) return;
+            const ahora = new Date();
+            try {
+                // Colección visitas_detalladas
+                await addDoc(collection(db, "visitas_detalladas"), {
+                    genero: gen,
+                    grupo_social: grp,
+                    anio: ahora.getFullYear().toString(),
+                    mes: ahora.toLocaleString('es-ES', { month: 'long' }),
+                    timestamp: Date.now()
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        $('#btn-admin-logo').on('dblclick', async function() {
+            $('#admin-panel').fadeIn();
+            await cargarFiltros(); 
+        });
+
+        async function cargarFiltros() {
+            const snap = await getDocs(collection(db, "visitas_detalladas"));
+            let anios = new Set();
+            let meses = new Set();
+            snap.forEach(doc => {
+                const d = doc.data();
+                if(d.anio) anios.add(d.anio);
+                if(d.mes) meses.add(d.mes);
+            });
+            $('#filter-year').empty();
+            anios.forEach(a => $('#filter-year').append(`<option value="${a}">${a}</option>`));
+            $('#filter-month').empty();
+            meses.forEach(m => $('#filter-month').append(`<option value="${m}">${m.toUpperCase()}</option>`));
+        }
+
+        $('#btn-generar-reporte').click(async function() {
+            const selYear = $('#filter-year').val();
+            const selMonth = $('#filter-month').val();
+            const snap = await getDocs(collection(db, "visitas_detalladas"));
+            let counts = {};
+
+            snap.forEach(doc => {
+                const d = doc.data();
+                if(d.anio === selYear && d.mes === selMonth) {
+                    const clave = `${d.genero} | ${d.grupo_social}`;
+                    counts[clave] = (counts[clave] || 0) + 1;
+                }
+            });
+
+            let html = `<table id="tabla-reporte" class="table table-bordered table-striped mt-3">
+                        <thead class="table-dark"><tr><th>Año</th><th>Mes</th><th>Género | Grupo</th><th>Total</th></tr></thead><tbody>`;
+            for (const k in counts) {
+                html += `<tr><td>${selYear}</td><td>${selMonth.toUpperCase()}</td><td>${k}</td><td>${counts[k]}</td></tr>`;
+            }
+            $('#reporte-content').html(Object.keys(counts).length ? html + '</tbody></table>' : '<div class="alert alert-info">No se encontraron registros.</div>');
+        });
+
+        $('#btn-close-admin').click(() => { $('#reporte-content').empty(); $('#admin-panel').fadeOut(); });
+        $('#btn-export-excel').click(() => { XLSX.writeFile(XLSX.utils.table_to_book(document.getElementById('tabla-reporte')), "Reporte_Visitantes.xlsx"); });
+        $('#btn-export-pdf').click(() => { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.autoTable({ html: '#tabla-reporte' }); doc.save("Reporte_Visitantes.pdf"); });
+    </script>
+</body>
+</html>
