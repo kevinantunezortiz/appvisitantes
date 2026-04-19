@@ -201,7 +201,7 @@
                 </div>
 
                 <div class="text-end mt-4">
-                    <button type="button" id="btn-siguiente" class="btn btn-dark btn-lg px-5">Siguiente</button>
+                    <button type="button" id="btn-siguiente" class="btn btn-info btn-lg px-5">Siguiente</button>
                     <button type="button" id="btn-finalizar"
                         class="btn btn-success btn-lg px-5 d-none">Finalizar</button>
                 </div>
@@ -262,19 +262,40 @@
             messagingSenderId: "924367990190",
             appId: "1:924367990190:web:48d333388355359e5cac3f"
         };
+        $('#btn-siguiente').prop('disabled', true);
+        $('#btn-finalizar').prop('disabled', true);
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
         let totalP = 0, actualP = 1;
 
+        $('input[name="genero"]').change(()=>{
+            if($('input[name="genero"]').is(':checked') && $('input[name="grupo_social"]').is(':checked')){
+                $('#btn-siguiente').prop('disabled', false);
+                if(totalP===1)
+                    $('#btn-finalizar').prop('disabled', false);
+                 if(actualP===totalP)
+                    $('#btn-finalizar').prop('disabled', false);
+            }
+        })
+
+
+        $('input[name="grupo_social"]').change(()=>{
+            if($('input[name="genero"]').is(':checked') && $('input[name="grupo_social"]').is(':checked')){
+                $('#btn-siguiente').prop('disabled', false);
+                if(totalP===1)
+                    $('#btn-finalizar').prop('disabled', false);
+                if(actualP===totalP)
+                    $('#btn-finalizar').prop('disabled', false);
+            }
+        })
         $('#btndisminuir').click(()=>{
             let valor = parseInt($('#num-personas').text())
             if(valor>1){
                 $('#num-personas').text(valor-1);
             }
         })
-
 
         $('#btnaumentar').click(()=>{
             let valor = parseInt($('#num-personas').text())
@@ -303,6 +324,8 @@
                 $('#btn-siguiente').show(); $('#btn-finalizar').hide();
                 $('#titulo-persona').text('Registro Visitante 1');
                 $('#num-personas').text("1")
+                $('#btn-siguiente').prop('disabled', true);
+                $('#btn-finalizar').prop('disabled', true);
             }, 2000);
         });
 
