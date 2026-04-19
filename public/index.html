@@ -1,51 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro de Visitantes - Museo Regional</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        body { background-color: #f4f7f6; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         .navbar {
             background: #611232;
             border-bottom: 2px solid #e9ecef;
             padding: 5px 0;
         }
-        
-        .logo-nav { height: 50px; cursor: pointer; }
-        
+
+        .logo-nav {
+            height: 50px;
+            cursor: pointer;
+        }
+
         .carousel-item img {
             height: 270px;
             object-fit: contain;
         }
-        
-        .section { display: none; }
-        .active { display: block; }
-        .card-custom { border-radius: 15px; border: none; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
-        
-        .radio-img-container {
-            display: flex; align-items: center; gap: 12px; padding: 10px 15px;
-            border: 1px solid #dee2e6; border-radius: 10px; margin-bottom: 8px;
-            transition: all 0.3s; cursor: pointer; background: white;
-            height: 100%; /* Para que todos los cuadros midan lo mismo */
+
+        .section {
+            display: none;
         }
-        .radio-img-container:hover { border-color: #0d6efd; background-color: #f0f7ff; }
-        
+
+        .active {
+            display: block;
+        }
+
+        .card-custom {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .radio-img-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.3s;
+            cursor: pointer;
+            background: white;
+            height: 100%;
+            /* Para que todos los cuadros midan lo mismo */
+        }
+
+        .radio-img-container:hover {
+            border-color: #0d6efd;
+            background-color: #f0f7ff;
+        }
+
         .icon-radio {
             width: 70px;
             height: 70px;
-            flex-shrink: 0; /* Evita que el icono se aplaste con texto largo */
+            flex-shrink: 0;
+            /* Evita que el icono se aplaste con texto largo */
             object-fit: contain;
         }
-        
-        #admin-panel { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: white; z-index: 2000; overflow-y: auto; padding: 20px;
+        .contador{
+            font-size: 30px;
+        }
+        .botoncircular {
+            margin: 10pxd;
+            width: 80px;
+            height: 80px;
+            border: 2px solid aqua;
+            /* Corregido: border-color solo no dibuja la línea */
+            border-radius: 50%;
+            font-size: 30px;
+            color: white;
+            background-color: #0d6efd;
+
+            /* Centrado perfecto */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0;
+            /* Quitamos el padding para que no desvíe el texto */
+
+            /* Sombra */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+
+            /* Opcional: para que se vea como botón al pasar el mouse */
+            cursor: pointer;
+        }
+        .botoncircular:hover{
+            background-color: #084cb3;
+        }
+
+        #admin-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 2000;
+            overflow-y: auto;
+            padding: 20px;
         }
     </style>
 </head>
+
 <body>
 
     <nav class="navbar sticky-top">
@@ -71,7 +139,9 @@
         <div id="step-1" class="section active card card-custom p-4 text-center">
             <h3 class="mb-3">¿Cuántas personas nos visitan?</h3>
             <div class="d-flex justify-content-center align-items-center gap-3">
-                <input type="number" id="num-personas" class="form-control form-control-lg w-25 text-center" min="1" value="1">
+                <button id="btndisminuir" class="botoncircular">-</button>
+                <label class="contador" id="num-personas">1</label>
+                <button id="btnaumentar" class="botoncircular">+</button>
                 <button id="btn-aceptar" class="btn btn-primary btn-lg px-5">Aceptar</button>
             </div>
         </div>
@@ -83,8 +153,8 @@
                 <div class="row mb-3">
                     <script>
                         const gens = [
-                            {id:'hombres', txt:'Hombre'}, {id:'mujeres', txt:'Mujer'},
-                            {id:'nobinarios', txt:'No Binario'}, {id:'prefiero_no_decirlo', txt:'Otro / No decir'}
+                            { id: 'hombres', txt: 'Hombre' }, { id: 'mujeres', txt: 'Mujer' },
+                            { id: 'nobinarios', txt: 'No Binario' }, { id: 'prefiero_no_decirlo', txt: 'Otro / No decir' }
                         ];
                         gens.forEach(g => {
                             document.write(`
@@ -104,15 +174,15 @@
                 <div class="row g-2">
                     <script>
                         const grupos = [
-                            { id: 'lgbttqimas', txt: 'LGBTTTQI+' }, 
+                            { id: 'lgbttqimas', txt: 'LGBTTTQI+' },
                             { id: 'infancias_adolescentes', txt: 'Infancias/Adolescentes' },
-                            { id: 'adultosmayores', txt: 'Adultos Mayores' }, 
+                            { id: 'adultosmayores', txt: 'Adultos Mayores' },
                             { id: 'afrodescendientes', txt: 'Personas Afrodescendientes' },
-                            { id: 'personas_artesanas', txt: 'Personas Artesanas' }, 
+                            { id: 'personas_artesanas', txt: 'Personas Artesanas' },
                             { id: 'personas_con_discapacidad', txt: 'Personas con Discapacidad' },
-                            { id: 'personas_embarazadas', txt: 'Embarazadas, En Lactancia, Jefas de Familia o en Situación de Vulnerabilidad' }, 
+                            { id: 'personas_embarazadas', txt: 'Embarazadas, En Lactancia, Jefas de Familia o en Situación de Vulnerabilidad' },
                             { id: 'situacion_calle', txt: 'Personas en Situación de Calle' },
-                            { id: 'personas_indigenas', txt: 'Personas Indígenas' }, 
+                            { id: 'personas_indigenas', txt: 'Personas Indígenas' },
                             { id: 'personas_jovenes', txt: 'Personas Jóvenes' },
                             { id: 'personas_migrantes', txt: 'Personas Migrantes y en situación de refugio' }
                         ];
@@ -132,7 +202,8 @@
 
                 <div class="text-end mt-4">
                     <button type="button" id="btn-siguiente" class="btn btn-dark btn-lg px-5">Siguiente</button>
-                    <button type="button" id="btn-finalizar" class="btn btn-success btn-lg px-5 d-none">Finalizar</button>
+                    <button type="button" id="btn-finalizar"
+                        class="btn btn-success btn-lg px-5 d-none">Finalizar</button>
                 </div>
             </form>
         </div>
@@ -197,12 +268,25 @@
 
         let totalP = 0, actualP = 1;
 
+        $('#btndisminuir').click(()=>{
+            let valor = parseInt($('#num-personas').text())
+            if(valor>1){
+                $('#num-personas').text(valor-1);
+            }
+        })
+
+
+        $('#btnaumentar').click(()=>{
+            let valor = parseInt($('#num-personas').text())
+            $('#num-personas').text(valor+1);
+        })
+
         $('#btn-aceptar').click(() => {
-            totalP = parseInt($('#num-personas').val());
-            if(totalP > 0) { $('#step-1').hide(); $('#step-2').fadeIn(); updateUI(); }
+            totalP = parseInt($('#num-personas').text());
+            if (totalP > 0) { $('#step-1').hide(); $('#step-2').fadeIn(); updateUI(); }
         });
 
-        $('#btn-siguiente').click(async function() {
+        $('#btn-siguiente').click(async function () {
             await saveToFirebase();
             actualP++;
             $('#titulo-persona').text(`Registro Visitante ${actualP}`);
@@ -210,7 +294,7 @@
             updateUI();
         });
 
-        $('#btn-finalizar').click(async function() {
+        $('#btn-finalizar').click(async function () {
             await saveToFirebase();
             $('#step-2').hide(); $('#step-3').fadeIn();
             setTimeout(() => {
@@ -218,17 +302,18 @@
                 $('#step-3').hide(); $('#step-1').show();
                 $('#btn-siguiente').show(); $('#btn-finalizar').hide();
                 $('#titulo-persona').text('Registro Visitante 1');
+                $('#num-personas').text("1")
             }, 2000);
         });
 
         function updateUI() {
-            if(actualP >= totalP) { $('#btn-siguiente').hide(); $('#btn-finalizar').removeClass('d-none').show(); }
+            if (actualP >= totalP) { $('#btn-siguiente').hide(); $('#btn-finalizar').removeClass('d-none').show(); }
         }
 
         async function saveToFirebase() {
             const gen = $('input[name="genero"]:checked').val();
             const grp = $('input[name="grupo_social"]:checked').val();
-            if(!grp) return;
+            if (!grp) return;
             const ahora = new Date();
             try {
                 // Colección visitas_detalladas
@@ -239,12 +324,12 @@
                     mes: ahora.toLocaleString('es-ES', { month: 'long' }),
                     timestamp: Date.now()
                 });
-            } catch(e) { console.error(e); }
+            } catch (e) { console.error(e); }
         }
 
-        $('#btn-admin-logo').on('dblclick', async function() {
+        $('#btn-admin-logo').on('dblclick', async function () {
             $('#admin-panel').fadeIn();
-            await cargarFiltros(); 
+            await cargarFiltros();
         });
 
         async function cargarFiltros() {
@@ -253,8 +338,8 @@
             let meses = new Set();
             snap.forEach(doc => {
                 const d = doc.data();
-                if(d.anio) anios.add(d.anio);
-                if(d.mes) meses.add(d.mes);
+                if (d.anio) anios.add(d.anio);
+                if (d.mes) meses.add(d.mes);
             });
             $('#filter-year').empty();
             anios.forEach(a => $('#filter-year').append(`<option value="${a}">${a}</option>`));
@@ -262,7 +347,7 @@
             meses.forEach(m => $('#filter-month').append(`<option value="${m}">${m.toUpperCase()}</option>`));
         }
 
-        $('#btn-generar-reporte').click(async function() {
+        $('#btn-generar-reporte').click(async function () {
             const selYear = $('#filter-year').val();
             const selMonth = $('#filter-month').val();
             const snap = await getDocs(collection(db, "visitas_detalladas"));
@@ -270,7 +355,7 @@
 
             snap.forEach(doc => {
                 const d = doc.data();
-                if(d.anio === selYear && d.mes === selMonth) {
+                if (d.anio === selYear && d.mes === selMonth) {
                     const clave = `${d.genero} | ${d.grupo_social}`;
                     counts[clave] = (counts[clave] || 0) + 1;
                 }
@@ -289,4 +374,5 @@
         $('#btn-export-pdf').click(() => { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.autoTable({ html: '#tabla-reporte' }); doc.save("Reporte_Visitantes.pdf"); });
     </script>
 </body>
+
 </html>
