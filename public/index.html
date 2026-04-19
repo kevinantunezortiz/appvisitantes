@@ -352,6 +352,10 @@
             const selMonth = $('#filter-month').val();
             const snap = await getDocs(collection(db, "visitas_detalladas"));
             let counts = {};
+            let total_mujeres = 0;
+            let total_hombres = 0;
+            let total_nobinarios = 0;
+            let total_prefierond = 0;
 
             snap.forEach(doc => {
                 const d = doc.data();
@@ -359,9 +363,17 @@
                     const clave = `${d.genero} | ${d.grupo_social}`;
                     counts[clave] = (counts[clave] || 0) + 1;
                 }
+                if(d.genero==="mujeres")
+                    total_mujeres+=1
+                else if (d.genero==="hombres")
+                    total_hombres+=1
+                else if (d.genero==="nobinarios")
+                    total_nobinarios+=1
+                else if (d.genero==="prefiero_no_decirlo")
+                    total_prefierond+=1
             });
-
-            let html = `<table id="tabla-reporte" class="table table-bordered table-striped mt-3">
+            let html = `<strong>Total de hombres: ${total_hombres}<br><strong>Total de mujeres: ${total_mujeres}<br><strong>Total de No Binarios: ${total_nobinarios}<br><strong>Total de Prefiero no decirlo: ${total_prefierond}<br>` 
+            html += `<table id="tabla-reporte" class="table table-bordered table-striped mt-3">
                         <thead class="table-dark"><tr><th>Año</th><th>Mes</th><th>Género | Grupo</th><th>Total</th></tr></thead><tbody>`;
             for (const k in counts) {
                 html += `<tr><td>${selYear}</td><td>${selMonth.toUpperCase()}</td><td>${k}</td><td>${counts[k]}</td></tr>`;
