@@ -69,9 +69,11 @@
             /* Evita que el icono se aplaste con texto largo */
             object-fit: contain;
         }
-        .contador{
+
+        .contador {
             font-size: 30px;
         }
+
         .botoncircular {
             margin: 10pxd;
             width: 80px;
@@ -96,7 +98,8 @@
             /* Opcional: para que se vea como botón al pasar el mouse */
             cursor: pointer;
         }
-        .botoncircular:hover{
+
+        .botoncircular:hover {
             background-color: #084cb3;
         }
 
@@ -147,7 +150,7 @@
         </div>
 
         <div id="step-2" class="section card card-custom p-4">
-            <h4 id="titulo-persona" class="text-primary mb-3">Registro Visitante 1</h4>
+            <h4 id="titulo-persona" >Registro Visitante 1</h4>
             <form id="form-registro">
                 <p class="fw-bold mb-2">¿Cómo se identifica la persona?</p>
                 <div class="row mb-3">
@@ -270,49 +273,62 @@
 
         let totalP = 0, actualP = 1;
 
-        $('input[name="genero"]').change(()=>{
-            if($('input[name="genero"]').is(':checked') && $('input[name="grupo_social"]').is(':checked')){
+        function getNumero(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        function generarColor() {
+            const r = getNumero(0,255)
+            const g = getNumero(0,255)
+            const b = getNumero(0,255)
+            $('#titulo-persona').css('color', `rgb(${r},${g},${b})`)
+
+        }
+
+        $('input[name="genero"]').change(() => {
+            if ($('input[name="genero"]').is(':checked') && $('input[name="grupo_social"]').is(':checked')) {
                 $('#btn-siguiente').prop('disabled', false);
-                if(totalP===1)
+                if (totalP === 1)
                     $('#btn-finalizar').prop('disabled', false);
-                 if(actualP===totalP)
+                if (actualP === totalP)
                     $('#btn-finalizar').prop('disabled', false);
             }
         })
 
 
-        $('input[name="grupo_social"]').change(()=>{
-            if($('input[name="genero"]').is(':checked') && $('input[name="grupo_social"]').is(':checked')){
+        $('input[name="grupo_social"]').change(() => {
+            if ($('input[name="genero"]').is(':checked') && $('input[name="grupo_social"]').is(':checked')) {
                 $('#btn-siguiente').prop('disabled', false);
-                if(totalP===1)
+                if (totalP === 1)
                     $('#btn-finalizar').prop('disabled', false);
-                if(actualP===totalP)
+                if (actualP === totalP)
                     $('#btn-finalizar').prop('disabled', false);
             }
         })
-        $('#btndisminuir').click(()=>{
+        $('#btndisminuir').click(() => {
             let valor = parseInt($('#num-personas').text())
-            if(valor>1){
-                $('#num-personas').text(valor-1);
+            if (valor > 1) {
+                $('#num-personas').text(valor - 1);
             }
         })
 
-        $('#btnaumentar').click(()=>{
+        $('#btnaumentar').click(() => {
             let valor = parseInt($('#num-personas').text())
-            $('#num-personas').text(valor+1);
+            $('#num-personas').text(valor + 1);
         })
 
         $('#btn-aceptar').click(() => {
             totalP = parseInt($('#num-personas').text());
+            generarColor()
             if (totalP > 0) { $('#step-1').hide(); $('#step-2').fadeIn(); updateUI(); }
         });
 
         $('#btn-siguiente').click(async function () {
-            await saveToFirebase();
+            generarColor()
             actualP++;
             $('#titulo-persona').text(`Registro Visitante ${actualP}`);
             $('#form-registro')[0].reset();
             updateUI();
+            await saveToFirebase();
         });
 
         $('#btn-finalizar').click(async function () {
@@ -386,16 +402,16 @@
                     const clave = `${d.genero} | ${d.grupo_social}`;
                     counts[clave] = (counts[clave] || 0) + 1;
                 }
-                if(d.genero==="mujeres")
-                    total_mujeres+=1
-                else if (d.genero==="hombres")
-                    total_hombres+=1
-                else if (d.genero==="nobinarios")
-                    total_nobinarios+=1
-                else if (d.genero==="prefiero_no_decirlo")
-                    total_prefierond+=1
+                if (d.genero === "mujeres")
+                    total_mujeres += 1
+                else if (d.genero === "hombres")
+                    total_hombres += 1
+                else if (d.genero === "nobinarios")
+                    total_nobinarios += 1
+                else if (d.genero === "prefiero_no_decirlo")
+                    total_prefierond += 1
             });
-            let html = `<strong>Total de hombres: ${total_hombres}<br><strong>Total de mujeres: ${total_mujeres}<br><strong>Total de No Binarios: ${total_nobinarios}<br><strong>Total de Prefiero no decirlo: ${total_prefierond}<br>` 
+            let html = `<strong>Total de hombres: ${total_hombres}<br><strong>Total de mujeres: ${total_mujeres}<br><strong>Total de No Binarios: ${total_nobinarios}<br><strong>Total de Prefiero no decirlo: ${total_prefierond}<br>`
             html += `<table id="tabla-reporte" class="table table-bordered table-striped mt-3">
                         <thead class="table-dark"><tr><th>Año</th><th>Mes</th><th>Género | Grupo</th><th>Total</th></tr></thead><tbody>`;
             for (const k in counts) {
