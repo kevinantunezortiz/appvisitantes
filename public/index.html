@@ -150,7 +150,7 @@
         </div>
 
         <div id="step-2" class="section card card-custom p-4">
-            <h4 id="titulo-persona" >Registro Visitante 1</h4>
+            <h4 id="titulo-persona">Registro Visitante 1</h4>
             <form id="form-registro">
                 <p class="fw-bold mb-2">¿Cómo se identifica la persona?</p>
                 <div class="row mb-3">
@@ -255,7 +255,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, enableIndexedDbPersistence, collection, addDoc, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDfHasUn9olSiAe59At2XcZFnyYMvGJm2U",
@@ -271,15 +271,30 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
+        // CONFIGURACIÓN DE PERSISTENCIA
+        enableIndexedDbPersistence(db)
+            .then(() => {
+                console.log("Persistencia activada con éxito");
+            })
+            .catch((err) => {
+                if (err.code == 'failed-precondition') {
+                    // Esto pasa si tienes varias pestañas de la app abiertas al mismo tiempo
+                    console.warn("La persistencia solo funciona en una pestaña a la vez.");
+                } else if (err.code == 'unimplemented-custom-browser') {
+                    // El navegador es muy antiguo o no permite almacenamiento local
+                    console.error("El navegador no soporta persistencia.");
+                }
+            });
+
         let totalP = 0, actualP = 1;
 
         function getNumero(min, max) {
             return Math.floor(Math.random() * (max - min + 1)) + min;
         }
         function generarColor() {
-            const r = getNumero(0,255)
-            const g = getNumero(0,255)
-            const b = getNumero(0,255)
+            const r = getNumero(0, 255)
+            const g = getNumero(0, 255)
+            const b = getNumero(0, 255)
             $('#titulo-persona').css('color', `rgb(${r},${g},${b})`)
 
         }
