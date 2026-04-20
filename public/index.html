@@ -328,6 +328,7 @@
             $('#titulo-persona').text(`Registro Visitante ${actualP}`);
             $('#form-registro')[0].reset();
             updateUI();
+            $('#btn-siguiente').prop('disabled', true);
             await saveToFirebase();
         });
 
